@@ -1,13 +1,26 @@
 package com.example.loginlivesession2.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+/*@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@RedisHash(value = "refreshToken", timeToLive = 24*60*60) //24시간
+public class RefreshToken{
+
+    @Id
+    private String refreshToken;
+    private String userId;
+}*/
 
 @Getter
 @Entity

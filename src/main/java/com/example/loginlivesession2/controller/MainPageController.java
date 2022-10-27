@@ -25,8 +25,8 @@ public class MainPageController {
 
     // 폴더 생성
     @PostMapping
-    public ResponseEntity<ResponseDto<String>> createFolder(@RequestBody FolderReqDto folderReqDto , @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return new ResponseEntity<>(ResponseDto.success(mainPageService.createFolder(folderReqDto, userDetails.getAccount())), HttpStatus.CREATED);
+    public ResponseDto<String> createFolder(@RequestBody FolderReqDto folderReqDto , @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseDto.success(mainPageService.createFolder(folderReqDto, userDetails.getAccount()));
     }
 
     // 메인 페이지에서 태그 검색

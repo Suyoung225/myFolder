@@ -25,10 +25,10 @@ public class FolderController {
     private final TagModifyService tagModifyService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<String>> addPhotos(@RequestPart(required = false, value = "file") List<MultipartFile> multipartFile,
+    public ResponseDto<String> addPhotos(@RequestPart(required = false, value = "file") List<MultipartFile> multipartFile,
                                                     @PathVariable Long folderId,
                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        return new ResponseEntity<>(ResponseDto.success(folderService.addPhotos(multipartFile, folderId, userDetails.getAccount())), HttpStatus.CREATED);
+        return ResponseDto.success(folderService.addPhotos(multipartFile, folderId, userDetails.getAccount()));
     }
 
     @PatchMapping
