@@ -92,22 +92,7 @@ public class MainPageService {
         if(tagList.size()>5) tagList = tagList.subList(0,5);
         List<String> topTags = tagList.stream().map(Tag::getTagName).collect(Collectors.toList());
 
-        // 내가 단 태그 중 가장 많은 태그 top 5
-        List<Folder> myFolderList = folderRepository.findByMember(member);
-        HashMap<String, Integer> hm = new HashMap<>();
-        for (Folder folder : myFolderList) {
-            List<FolderTag> myTagFolderList = foldertagRepository.findByFolderId(folder.getId());
-            for (FolderTag folderTag : myTagFolderList) {
-                hm.put(folderTag.getTagName(), hm.getOrDefault(folderTag.getTagName(), 0) + 1);
-            }
-        }
-        List<Map.Entry<String, Integer>> entryList = new LinkedList<>(hm.entrySet());
-        entryList.sort(((o1, o2) -> hm.get(o2.getKey()) - hm.get(o1.getKey())));
-        if(entryList.size() > 5)  entryList = entryList.subList(0,5);
-        HashMap<String, Integer> myTopTags = new HashMap<>();
-        for (Map.Entry<String, Integer> entry : entryList) {
-            myTopTags.put(entry.getKey(), entry.getValue());
-        }
+        HashMap<String, Long> myTopTags = folderRepository.myTopTags(member);
 
         return new MainPageResDto(folders,topTags, myTopTags);
     }
