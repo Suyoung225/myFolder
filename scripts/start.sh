@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PROJECT_ROOT="/home/ubuntu/app"
 JAR_FILE="$PROJECT_ROOT/spring-webapp.jar"
@@ -19,7 +19,7 @@ chmod +x $JAR_NAME
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
 nohup java -jar \
--Dspring.config.location=classpath:/home/ubuntu/app/src/main/resources/application-aws.properties \
+-Dspring.config.location=classpath:/home/ubuntu/application-aws.properties \
 $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
