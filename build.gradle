@@ -1,3 +1,7 @@
+jar {
+    enabled = false
+}
+
 buildscript { // querydsl
     ext {
         queryDslVersion = "5.0.0"
