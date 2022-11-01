@@ -13,6 +13,9 @@ TIME_NOW=$(date +%c)
 echo "$TIME_NOW > $JAR_FILE 파일 복사" >> $DEPLOY_LOG
 cp $PROJECT_ROOT/build/libs/*.jar $JAR_FILE
 
+echo "> $JAR_NAME에 실행권한 추가"
+chmod +x $JAR_NAME
+
 # jar 파일 실행
 echo "$TIME_NOW > $JAR_FILE 파일 실행" >> $DEPLOY_LOG
 nohup java -jar $JAR_FILE > $APP_LOG 2> $ERROR_LOG &
