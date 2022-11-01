@@ -1,29 +1,48 @@
-name: my-front
+name: github-action-test
+
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+env:
+  S3_BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+  AWS_REGION: ap-northeast-2
+  CODEDEPLOY_NAME: githubaction-test
+  CODEDEPLOY_GROUP: githubactions-test-group
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: 'ap-northeast-2'
 
     steps:
-      - name: Checkout source code.
-        uses: actions/checkout@master
-        
-      - name: archive drcloud 
-        run: tar cvfz ./drcloud.tar.gz *
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
       
-      - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./drcloud.tar.gz s3://github-action-codedeploy-s3/archive/
+      - name: Build with Gradle
+        run: ./gradlew build
+        shell: bash
         
-      - name: deploy with AWS codeDeploy
-        run: aws deploy create-deployment
-          --application-name githubaction-test
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name githubaction-test-group
-          --s3-location bucket=github-action-codedeploy-s3,bundleType=tgz,key=archive/drcloud.tar.gz
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Upload to S3
+        run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name $CODEDEPLOY_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODEDEPLOY_GROUP --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
