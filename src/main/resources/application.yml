@@ -38,9 +38,9 @@ cloud:
     stack:
       auto: 'false'
 
-server:
-  port: 443
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-type: PKCS12
-    key-store-password: 123456
+#server:
+#  port: 443
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: 123456
