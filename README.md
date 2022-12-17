@@ -8,6 +8,8 @@
 
 <br>
 
+## 아키텍처
+![아키텍처](https://user-images.githubusercontent.com/87157566/208238216-df9583e8-2396-41ac-b97f-0bdb4e96f8ba.png)
 
 
 ## 🌟 주요기능
